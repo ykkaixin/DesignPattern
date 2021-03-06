@@ -1,0 +1,58 @@
+<project name="primeDetector" default="compile_all" basedir="..">
+
+  <property name="BUILD.compiler"       value="modern"/>
+  <property name="src"                  value="src"/>
+  <property name="BUILD"                value="src/BUILD"/>
+  <property name="classes"              value="${BUILD}/classes"/>
+
+  <target name="all" depends="compile_all"/>
+
+  <target name="compile_all"
+          depends="primeDetector"/>
+
+  <target name="clean">
+       <delete dir="${BUILD}"/>
+  </target>
+
+  <!-- Prepare target directories -->
+  <target name="prepare">
+        <mkdir dir="${BUILD}"/>
+        <mkdir dir="${classes}"/>
+  </target>
+
+ <target name="jar">
+        <mkdir dir="${BUILD}/jar"/>
+        <jar destfile="${BUILD}/jar/primeDetector.jar" basedir="${BUILD}/classes">
+            <manifest>
+                <attribute name="Main-Class" value="primeDetector.driver.Driver"/>
+            </manifest>
+        </jar>
+    </target>
+
+  <!-- ** means all subdirectories as well -->
+  <!-- * means all files in the current directory -->
+  <!-- for just java files use *.java -->
+
+  <target name="primeDetector" depends="prepare">
+    <javac includeantruntime="false" srcdir="${src}"
+	           includes="primeDetector/**"
+           excludes="**/package.html"
+           destdir="${classes}"
+           classpath="${classes}"
+           debug="on"
+           optimize="on"
+           deprecation="off"/>
+  </target>
+
+<target name="run" depends="jar">
+        <java jar="${BUILD}/jar/primeDetector.jar"  fork="true">
+	<arg value="${inputNumStream}"/> <!-- input file -->
+	<arg value="${numThreads}"/> <!-- numb of thread. -->
+	<arg value="${capacity}"/> <!-- capacity of result. -->
+	<arg value="${persisterServiceIp}"/> <!-- ip. -->
+	<arg value="${persisterServicePort}"/> <!-- port. -->
+	<arg value="${debugValue}"/> <!--debugValue -->
+        </java>	
+    </target>
+
+</project>
